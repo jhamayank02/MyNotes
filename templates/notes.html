@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Notes{% endblock title %}
+
+{% block notesactive %}active{% endblock notesactive %} {% block body %}
+{% if user.is_authenticated %}
+<div class="container px-5">
+  <h3 class="my-3">Add Notes</h3>
+
+  <form action="addNote/" method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="noteHeading" class="form-label">Note heading</label>
+      <input required type="text" name="noteHeading" class="form-control" id="noteHeading" aria-describedby="noteHeading" />
+    </div>
+    <div class="mb-3">
+      <label for="noteContent" class="form-label">Note</label>
+      <textarea required class="form-control" name="noteContent" id="noteContent" rows="3"></textarea>
+    </div>
+    <div class="mb-3">
+      <label for="tag" class="form-label">Tag (Optional)</label>
+      <input type="text" name="tag" class="form-control" id="noteTag" aria-describedby="tag" />
+    </div>
+    <div class="mb-3">
+      <label for="deadlineDate" class="form-label">Deadline date (Optional)</label>
+      <input type="text" name="deadlineDate" class="form-control" id="deadlineDate" aria-describedby="deadlineDate" value="" />
+      <small class="text-danger">Date should be in yyyy-mm-dd format (e.g. 2021-12-16)</small>
+    </div>
+    <div class="mb-3">
+      <label for="deadlineTime" class="form-label">Deadline time (Optional)</label>
+      <input type="time" name="deadlineTime" class="form-control" id="deadlineTime" aria-describedby="deadlineTime" value="" />
+    </div>
+    <button type="submit" class="btn btn-success">Submit</button>
+  </form>
+  <hr>
+</div>
+
+
+<div class="container px-5 mt-5">
+  {% if allNotes|length > 0 %}
+  <h3 class="my-3">Your Notes</h3>
+  {% else %}
+  <h6 class="my-3">You have not added any note yet. Start adding your notes to see them here.</h6>
+  <br>
+  <br>
+  <br>
+  <br>
+  {% endif %}
+
+  <div class="container">
+
+    <div class="row">
+
+      {% for note in allNotes %}
+        <div class="col-md-4 mb-3">
+          <div class="card mx-auto" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title mb-0">{{note.noteHeading}}
+                {% if note.tag != None %}<span class="badge rounded-pill bg-danger">{{note.tag}}</span>{% endif %}
+              </h5>
+              <div class="mb-2"><small class="text-muted">Wrote on {{note.timeStamp}}</small></div>
+              <p class="card-text mb-3">{{note.noteContent|truncatechars:100}}</p>
+              {% if note.deadlineDate != None or note.deadlineTime != None %}
+              <div class="mb-2"><small class="text-danger">Finish till
+                  {% if note.deadlineDate != None%}{{note.deadlineDate}}{% endif %} {% if note.deadlineTime != None%} at
+                  {{note.deadlineTime}}{% endif %}</small></div>
+              {% endif %}
+              <div class="d-flex">
+                <a href="/notes/{{note.noteHeading}}" class="btn btn-success">Read</a>
+              <form class="ms-2" action="deleteNote/" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="noteId" value="{{note.sno}}">
+                <button type="submit" class="btn btn-outline-success">Delete</button>
+              </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+
+    </div>
+
+  </div>
+
+</div>
+
+{% else %}
+<div class="container my-5">
+  <h5>SignUp first to access your notes or if you already have an account then Login to get started.</h5>
+  <div class="my-3">
+    <button type="button" class="btn btn-success mx-1" data-bs-toggle="modal" data-bs-target="#signupModal">
+    SignUp
+  </button>
+  <button type="button" class="btn btn-success mx-1" data-bs-toggle="modal" data-bs-target="#loginModal">
+    Login
+  </button>
+  </div>
+  
+</div>
+{% endif %}
+
+
+{% endblock body %}

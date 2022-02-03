@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock title %}
+
+{% block homeactive %}active{% endblock homeactive %}
+
+{% block body %}
+
+<div class="container col-xxl-8 px-4 py-5">
+    <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+      <div class="col-10 col-sm-8 col-lg-6 m-auto">
+        <img src="/static/images/notes.png" class="w-75 d-block mx-lg-auto img-fluid" alt="Bootstrap Themes">
+      </div>
+      <div class="col-lg-6">
+        <h1 class="display-5 fw-bold lh-1 mb-3">Always forget important things?</h1>
+        <p class="lead">Don't worry. We have got you covered. Make notes which will remind you about your important tasks and you can also mark the particular note as important and many more things. So what are you waiting for? Make account and start managing your day to day tasks easily.</p>
+        {% if user.is_authenticated %}
+        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+          <a href="/notes" class="btn btn-success btn-lg px-4 me-md-2">Your Notes</a>
+        </div>
+        {% else %}
+        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+          <button type="button" class="btn btn-success btn-lg px-4 me-md-2" data-bs-toggle="modal" data-bs-target="#signupModal">Signup</button>
+          <button type="button" class="btn btn-outline-success btn-lg px-4" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
+        </div>
+        {% endif %}
+        
+      </div>
+    </div>
+  </div>
+
+{% endblock body %}

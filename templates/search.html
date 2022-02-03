@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Your Notes{% endblock title %}
+
+{% block body %}
+
+<div class="container py-3">
+
+    {% if results|length > 0 %}
+    <h4 class="mb-3">Search Results({{results.count}})</h4>
+    <div class="row">
+
+        {% for result in results %}
+          <div class="col-md-4 mb-3">
+            <div class="card mx-auto" style="width: 18rem;">
+              <div class="card-body">
+                <h5 class="card-title mb-0">{{result.noteHeading}}
+                  {% if result.tag != None %}<span class="badge rounded-pill bg-danger">{{result.tag}}</span>{% endif %}
+                </h5>
+                <div><small class="text-muted mb-5">Wrote on {{result.timeStamp}}</small></div>
+                <p class="card-text mb-3">{{result.noteContent|truncatechars:100}}</p>
+                {% if result.deadlineDate != None or result.deadlineTime != None %}
+                <div class="mb-2"><small class="text-danger">Finish till
+                    {% if result.deadlineDate != None%}{{result.deadlineDate}}{% endif %} {% if result.deadlineTime != None%} at
+                    {{result.deadlineTime}}{% endif %}</small></div>
+                {% endif %}
+                <a href="/notes/{{result.noteHeading}}" class="btn btn-primary">Read</a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+  
+      </div>
+    {% else %}
+    <h4>Search Results({{results.count}})</h4>
+    <div class="container">
+        <h3>No results for <strong>"{{query}}"</strong>.</h3>
+        <h5>Search Help</h5>
+        <ul>
+        <li>Check for spelling mistakes.</li>
+        <li>Try with different keyword.</li>
+        <li>Maybe the topic you are searching for is not present on our site.</li>
+        </ul>
+        <div class="text-center">
+          <img src="/static/images/nothingFound.png" class="w-25" alt="...">
+        </div>
+        </div>
+    {% endif %}
+
+</div>
+
+{% endblock body %}
